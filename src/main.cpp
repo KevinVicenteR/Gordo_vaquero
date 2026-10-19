@@ -1,18 +1,28 @@
 #include <Arduino.h>
+#include "hardware/DriverMotores.h"
+#include "hardware/PlacaXMotion.h"
+#include "sensores/Percepcion.h"
+#include "estrategia/EstrategiaReglas.h"
+#include "movimiento/ControlMovimiento.h"
+#include "robot/ControladorRobot.h"
+#include "estrategia/EstrategiaCompetencia.h"
+#include "combate/ModoCombate.h"
+#include "configuracion/Parametros.h"
 
-// put function declarations here:
-int myFunction(int, int);
+PlacaXMotion placa;
+DriverMotores motores;
+Percepcion percepcion;
+EstrategiaReglas estrategiaClasica;
+ControlMovimiento controlMovimiento;
+EstrategiaCompetencia estrategia(estrategiaClasica, controlMovimiento);
+ControladorRobot robot(percepcion, estrategia, controlMovimiento, motores);
+
+ModoCombate modo(placa, motores, percepcion, controlMovimiento, robot);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    modo.iniciar();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    modo.actualizar();
 }
